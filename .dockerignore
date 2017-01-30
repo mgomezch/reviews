@@ -1,0 +1,22 @@
+/.git
+
+# Python interpreter files
+__pycache__
+*.pyc
+
+# Editor temporary files
+.ropeproject
+*~
+*.sw?
+
+# Local environment variables
+/.env
+
+# Docker service data
+/data/
+
+# Database migrations
+/reviews/migrations/0*
+
+# Docker Compose overrides, mostly symlinked for production
+docker-compose.override.yml
