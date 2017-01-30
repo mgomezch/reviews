@@ -69,6 +69,11 @@ USE_TZ = True
 TIME_ZONE = 'UTC'
 
 
+# CORS settings:
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_REPLACE_HTTPS_REFERER = True
+
+
 # Security middleware settings:
 
 SECURE_BROWSER_XSS_FILTER = True
@@ -100,27 +105,41 @@ DATABASES = {
 
 INSTALLED_APPS = [
 
-    # Required by the Django admin app:
+    # Basic Django apps required by the Django admin app:
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.messages',
     'django.contrib.sessions',
     'django.contrib.admin',
 
-    # Required by the Django Debug Toolbar:
+    # Despite this project being mostly a REST API, the Django Debug Toolbar,
+    # the API browser provided by the Django Rest Framework, and the Swagger
+    # documentation all require serving static files.
     'django.contrib.staticfiles',
+
+    # Despite this project being mostly a REST API, the Django Debug Toolbar is
+    # convenient for development:
     'debug_toolbar',
 
     # Required by the CORS headers middleware:
     'corsheaders',
 
-    # Required by the API implementation:
+    # Django REST Framework, the base API implementation library:
     'rest_framework',
+
+    # Django REST Framework token authentication:
     'rest_framework.authtoken',
+
+    # Swagger API documentation for the Django REST Framework:
     'rest_framework_swagger',
 
-    # This project's local apps:
+    # Permission management library for the Django REST Framework:
+    'dry_rest_permissions',
+
+    # This project's base models and routes:
     'reviews',
+
+    # The API components of this project:
     'api',
 
 ]
@@ -150,10 +169,13 @@ MIDDLEWARE = [
     # Enable several HTTP-related security features:
     'django.middleware.security.SecurityMiddleware',
 
-    # Handle CORS requests and include appropriate response headers  to enable
+    # Handle CORS requests and include appropriate response headers to enable
     # scripts running inside browsers to perform requests to the API despite
-    # being served from different origins:
+    # being served from different origins.  Also, enable CSRF protection.
+    # Note that ordering is very important here.
     'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'corsheaders.middleware.CorsPostCsrfMiddleware',
 
     # Serve static files with WhiteNoise:
     'whitenoise.middleware.WhiteNoiseMiddleware',

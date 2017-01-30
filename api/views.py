@@ -1,3 +1,8 @@
+from api.filters import (
+    ReviewFilterBackend,
+    UserFilterBackend,
+)
+
 from api.serializers import (
     CompanySerializer,
     ReviewSerializer,
@@ -5,12 +10,10 @@ from api.serializers import (
     UserSerializer,
 )
 
+from dry_rest_permissions.generics import DRYPermissions, DRYObjectPermissions
 from ipware.ip import get_ip
 
-from rest_framework.viewsets import (
-    ModelViewSet,
-    ReadOnlyModelViewSet,
-)
+from rest_framework.viewsets import ModelViewSet
 
 from reviews.models import (
     Company,
@@ -20,30 +23,32 @@ from reviews.models import (
 )
 
 
-class UserViewSet(ReadOnlyModelViewSet):
-    # TODO: implement user creation and the like
+class UserViewSet(ModelViewSet):
 
+    queryset = User.objects.all()
     serializer_class = UserSerializer
     __doc__ = serializer_class.Meta.model.__doc__
 
+    filter_backends = (UserFilterBackend, )
+    permission_classes = (DRYPermissions, )
+
+    # The API identifies users by usernames instead of the default numeric
+    # primary key, so the lookup_field attribute must be specified explicitly:
     lookup_field = 'username'
-    queryset = User.objects.all()
 
 
 class CompanyViewSet(ModelViewSet):
 
+    queryset = Company.objects.all()
     serializer_class = CompanySerializer
     __doc__ = serializer_class.Meta.model.__doc__
-
-    queryset = Company.objects.all()
 
 
 class ReviewerViewSet(ModelViewSet):
 
+    queryset = Reviewer.objects.all()
     serializer_class = ReviewerSerializer
     __doc__ = serializer_class.Meta.model.__doc__
-
-    queryset = Reviewer.objects.all()
 
     # The Reviewer model has a non-default primary key, so the lookup_field
     # attribute must be specified explicitly:
@@ -60,24 +65,13 @@ class ReviewerViewSet(ModelViewSet):
 
 
 class ReviewViewSet(ModelViewSet):
-    # TODO: permissions; users can still see and edit reviews they don't own
 
+    queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     __doc__ = serializer_class.Meta.model.__doc__
 
-    queryset = Review.objects.all()
-
-    # Override the default queryset so that regular, non-admin users can only
-    # see reviews they submitted themselves; only admin users see every review.
-    def get_queryset(self):
-        queryset = super().get_queryset()
-
-        user = self.request.user
-        return (
-            queryset
-            if user.is_staff
-            else user.reviews
-        ).all()
+    filter_backends = (ReviewFilterBackend, )
+    permission_classes = (DRYObjectPermissions, )
 
     # Customize new review submission:
     def perform_create(self, serializer):

@@ -16,6 +16,11 @@ from django.db.models import (
     URLField,
 )
 
+from dry_rest_permissions.generics import (
+    allow_staff_or_superuser,
+    authenticated_users,
+)
+
 from model_utils.models import TimeStampedModel
 from rest_framework.authtoken.models import Token
 
@@ -42,6 +47,33 @@ class User(AbstractUser, Model):
 
     def __str__(self):
         return self.username
+
+    # Allow only administrators to interact with arbitrary user profiles.
+    # Non-administrator users can only read their own profile.
+
+    # Only authenticated users can read the list of users:
+    @staticmethod
+    @authenticated_users
+    def has_read_permission(request):
+        return True
+
+    # Authenticated users can only read their own individual user profiles, but
+    # administrators can read any user profile:
+    @authenticated_users
+    @allow_staff_or_superuser
+    def has_object_read_permission(self, request):
+        return self == request.user
+
+    # Only administrators can create users:
+    @staticmethod
+    @allow_staff_or_superuser
+    def has_write_permission(request):
+        return False
+
+    # Only administrators can modify user profiles:
+    @allow_staff_or_superuser
+    def has_object_write_permission(self, request):
+        return False
 
 
 # Create authentication tokens for users automatically after saving new Users:
@@ -129,20 +161,24 @@ class Review(Model):
         help_text='Numeric rating between 1 (worst) and 5 (best); e.g. 4',
     )
 
+    title_max_length = 64
     title = CharField(
-        max_length=64,
+        max_length=title_max_length,
         blank=True,
-        help_text='Review title; e.g. Awesome company!',
+        help_text=f'''
+            Review title of up to {title_max_length} characters; e.g. Awesome \
+            company!
+        ''',
     )
 
     summary_max_length = 10000
     summary = TextField(
         max_length=summary_max_length,
         blank=True,
-        help_text=(
-            f'Summary of up to {summary_max_length} characters recounting the '
-            'reviewer\'s experience with the company under review'
-        ),
+        help_text=f'''
+            Summary of up to {summary_max_length} characters recounting the \
+            reviewer's experience with the company under review
+        ''',
     )
 
     ip_address = GenericIPAddressField(
@@ -163,3 +199,17 @@ class Review(Model):
 
     def __str__(self):
         return f'{self.title} ({self.pk})'
+
+    # Allow only administrators to interact with reviews submitted by other
+    # users.  Non-administrator users can only interact with reviews they
+    # submitted themselves.
+
+    @authenticated_users
+    @allow_staff_or_superuser
+    def has_object_read_permission(self, request):
+        return self.submitter == request.user
+
+    @authenticated_users
+    @allow_staff_or_superuser
+    def has_object_write_permission(self, request):
+        return self.submitter == request.user

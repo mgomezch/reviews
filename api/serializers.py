@@ -24,6 +24,7 @@ class UserSerializer(HyperlinkedModelSerializer):
             'username',
             'email',
             'is_staff',
+            'password',
         ]
 
         # These fields are determined automatically and should be rejected in
@@ -38,7 +39,16 @@ class UserSerializer(HyperlinkedModelSerializer):
                 # Users are looked up by username, not by their ID number.
                 'lookup_field': 'username',
             },
+            'password': {
+                'write_only': True,
+            },
         }
+
+    def create(self, validated_data):
+        user = User(**validated_data)
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
 
 
 class CompanySerializer(HyperlinkedModelSerializer):
