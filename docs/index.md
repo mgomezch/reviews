@@ -196,7 +196,7 @@ The API implementation comes with live [Swagger](http://swagger.io/) interactive
 
 The components of this application are meant to be managed and executed by Docker Compose.
 
-To run this application in production, copy or make a symbolic link to `docker-compose.production.yml` named `docker-compose.override.yml`, and run `docker-compose up`.  Make sure to customize the deployment domain name on `docker-compose.production.yml`.
+To run this application in production, run the script in `scripts/setup_production.sh` from the repository root, and then run `docker-compose up -d`.  Make sure to customize the deployment domain name on `docker-compose.production.yml`.
 
 The recommended development environment is Ubuntu Linux 16.04.  [Clone this repository](https://github.com/mgomezch/local_services), run the `setup-ubuntu.sh` and run `docker-compose up -d` inside that repository's root directory to bring supporting services up.  After doing that, bring this project up by running `docker-compose up -d` in this project's root repository directory.  After the database initializes, you should be able to open the application at <http://reviews.service.consul.test/>.
 
