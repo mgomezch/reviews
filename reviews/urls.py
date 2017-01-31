@@ -44,7 +44,7 @@ urlpatterns = [
 
     # Swagger API documentation:
     url(
-        regex=r'^/?$',
+        regex=r'^$',
         view=get_swagger_view(
             title='Reviews API',
         ),
