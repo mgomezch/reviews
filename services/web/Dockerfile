@@ -28,3 +28,4 @@ CMD ["development"]
 EXPOSE 80
 
 COPY . /usr/src/app
+RUN mkdocs build

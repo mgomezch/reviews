@@ -57,6 +57,9 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_ROOT = join(PROJECT_ROOT, 'static')
 STATIC_URL = '/static/'
 USE_ETAGS = True  # This improves caching of static resources
+STATICFILES_DIRS = [
+    ('doc', f'{BASE_DIR}/site'),
+]
 
 
 # Use a custom User model in case of future needs to change default user fields;
