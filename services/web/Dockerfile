@@ -22,10 +22,12 @@ ARG PIP_TRUSTED_HOST
 COPY requirements.txt /usr/src/app/
 RUN pip install --no-cache-dir -r requirements.txt
 
+COPY docs/ /usr/src/app/docs/
+COPY mkdocs.yml /usr/src/app/
+RUN mkdocs build
+
 ENTRYPOINT ["./services/web/docker-entrypoint.sh"]
 CMD ["development"]
-
 EXPOSE 80
 
 COPY . /usr/src/app
-RUN mkdocs build
