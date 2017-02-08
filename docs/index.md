@@ -192,7 +192,7 @@ JSON Web Tokens expire after a configurable timeout currently set to one hour.  
 The API implementation comes with live [Swagger](http://swagger.io/) interactive API documentation at the API common base address (e.g. <https://reviews.mgomez.ch/>) as well as a live API browser at the API entrypoint address (e.g. <https://reviews.mgomez.ch/v1/>).  These can be used for interactive discovery of API features within a Web browser.
 
 
-### Deployment
+## Deployment
 
 The components of this application are meant to be managed and executed by Docker Compose.
 
@@ -201,3 +201,8 @@ To run this application in production, run the script in `scripts/setup_producti
 The recommended development environment is Ubuntu Linux 16.04.  [Clone this repository](https://github.com/mgomezch/local_services), run the `setup-ubuntu.sh` and run `docker-compose up -d` inside that repository's root directory to bring supporting services up.  After doing that, bring this project up by running `docker-compose up -d` in this project's root repository directory.  After the database initializes, you should be able to open the application at <http://reviews.service.consul.test/>.
 
 After deployment, make sure to run `docker-compose run --rm web sync` to set up the database.
+
+
+## Tests
+
+The application comes bundled with a small suite of integration tests demonstrating a property-based HTTP API testing discipline using [Gabbi](http://gabbi.readthedocs.org/) and [Hypothesis](http://hypothesis.works/) on a small subset of the API's functions: user management.  The test suite can be executed from the repository root directory by running `docker-compose run --rm web test`.  For details, see the test specifications in `api/tests/test_users.py`.
