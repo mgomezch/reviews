@@ -32,9 +32,15 @@ class UserViewSet(ModelViewSet):
     filter_backends = (UserFilterBackend, )
     permission_classes = (DRYPermissions, )
 
-    # The API identifies users by usernames instead of the default numeric
-    # primary key, so the lookup_field attribute must be specified explicitly:
     lookup_field = 'username'
+
+    # The API identifies users by usernames instead of the default numeric
+    # primary key, so the lookup_field attribute must be specified explicitly.
+    # Furthermore, the username field can contain dots, and the default regular
+    # expression used to match lookup field values in URLs assumes dots are not
+    # part of the lookup field value.  This allows any character other than / or
+    # ? to occur within a username.
+    lookup_value_regex = '[^/?]+'
 
 
 class CompanyViewSet(ModelViewSet):
