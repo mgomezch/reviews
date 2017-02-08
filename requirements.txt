@@ -9,7 +9,9 @@ django-rest-swagger==2.1.1
 djangorestframework-jwt==1.9.0
 djangorestframework==3.5.3
 dry-rest-permissions==0.1.8
+gabbi==1.31.0
 gunicorn==19.6.0
+hypothesis==3.6.1
 json-logging-py==0.2
 mkdocs==0.16.1
 psycopg2==2.6.2

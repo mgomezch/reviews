@@ -1,0 +1,22 @@
+[
+  {
+    "model": "reviews.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$30000$0CAvwpUokD4g$Ot7M3W1/0U3xyBZiYH+ic9UzLTYfOz4t72ouA3RDYWg=",
+      "last_login": "2017-01-30T15:26:06.467Z",
+      "is_superuser": true,
+      "username": "test_admin",
+      "first_name": "John",
+      "last_name": "Doe",
+      "email": "admin@example.com",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2017-01-29T01:35:48.805Z",
+      "created": "2017-01-30T05:05:39.488Z",
+      "modified": "2017-01-30T18:00:30.620Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  }
+]
