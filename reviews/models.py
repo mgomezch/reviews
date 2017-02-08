@@ -1,8 +1,8 @@
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.validators import ASCIIUsernameValidator
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
 from django.db.models import (
     CASCADE,
     CharField,
@@ -44,6 +44,10 @@ class User(AbstractUser, Model):
     publish reviews of any company authored by any reviewer.  Users may also \
     manage company and reviewer registration in the system's database.
     '''
+
+    # Restrict usernames to ASCII to avoid potential encoding issues with HTTP
+    # Basic authentication:
+    username_validator = ASCIIUsernameValidator
 
     def __str__(self):
         return self.username
