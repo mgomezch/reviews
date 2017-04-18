@@ -16,6 +16,7 @@ services:
       EMAIL: "targen@gmail.com"
       SERVICE_80_NAME: "reviews-http"
       SERVICE_80_CHECK_TCP: "true"
+      SERVICE_80_CHECK_INITIAL_STATUS: "passing"
       SERVICE_80_CHECK_INTERVAL: "30s"
       SERVICE_80_CHECK_TIMEOUT: "15s"
       SERVICE_80_TAGS: "prefixhttp-reviews.mgomez.ch/"
